@@ -22,19 +22,37 @@
         try {
           for (const part of meta.parts) {
             if (cancelled) return;
-            const response = await originalFetch(new URL(part.file, base), { signal: controller.signal });
-            if (!response.ok) throw new Error('Không tải được phần game: ' + part.file + ' (HTTP ' + response.status + ')');
-            reader = response.body.getReader();
-            let received = 0;
-            while (!cancelled) {
-              const next = await reader.read();
-              if (next.done) break;
-              received += next.value.byteLength;
-              output.enqueue(next.value);
+            let block = null;
+            for (let attempt = 0; attempt < 4; attempt++) {
+              if (controller.signal.aborted) throw new Error('Đã hủy tải game.');
+              const local = new AbortController();
+              const forwardAbort = () => local.abort();
+              controller.signal.addEventListener('abort', forwardAbort, { once: true });
+              const timeout = setTimeout(() => local.abort(), 45000);
+              try {
+                const partURL = new URL(part.file, base);
+                partURL.searchParams.set('v', part.sha256.slice(0,16));
+                if (attempt) partURL.searchParams.set('retry', String(attempt));
+                const response = await originalFetch(partURL, { signal: local.signal });
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const bytes = new Uint8Array(await response.arrayBuffer());
+                if (bytes.byteLength !== part.bytes) throw new Error('Thiếu dữ liệu');
+                if (globalThis.crypto?.subtle) {
+                  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+                  const hash = Array.from(digest, v => v.toString(16).padStart(2,'0')).join('');
+                  if (hash !== part.sha256) throw new Error('Dữ liệu không đúng phiên bản');
+                }
+                block = bytes;
+                break;
+              } catch (error) {
+                if (attempt === 3 || controller.signal.aborted) throw new Error('Không tải được ' + part.file + '. Hãy tải lại trang. ' + error.message);
+              } finally {
+                clearTimeout(timeout);
+                controller.signal.removeEventListener('abort', forwardAbort);
+              }
             }
-            reader.releaseLock();reader = null;
             if (cancelled) return;
-            if (received !== part.bytes) throw new Error('Phần game thiếu dữ liệu: ' + part.file);
+            output.enqueue(block);
           }
           output.close();
         } catch (error) { if (!cancelled) output.error(error); }
