@@ -93,6 +93,8 @@ body {
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
+	<link rel="preload" as="image" href="index.png?v=87996a435f0330b4">
+<link rel="stylesheet" href="loading-screen.css?v=4019ca87217e4471">
 	</head>
 	<body><div id="loading-hint" role="status" style="position:fixed;bottom:18px;left:12px;right:12px;text-align:center;color:#eee;font:15px system-ui;z-index:10">Đang tải game, vui lòng giữ trang mở…</div>
 		<canvas id="canvas">
@@ -104,7 +106,7 @@ body {
 		</noscript>
 
 		<div id="status">
-			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png?v=87996a435f0330b4" alt="Tiệm Lẩu trên Đường Hạnh Phúc" fetchpriority="high" decoding="async">
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
 		</div>

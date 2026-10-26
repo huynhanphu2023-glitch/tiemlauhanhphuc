@@ -1,0 +1,82 @@
+/* Keep the complete supplied artwork visible, including on portrait screens. */
+body { background-color: #2b1b15; }
+
+#status {
+  position: fixed;
+  inset: 0;
+  background: #2b1b15;
+  visibility: visible;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+#status::before {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  z-index: -1;
+  background: linear-gradient(#2b1b1533, #2b1b1577), url("index.png?v=87996a435f0330b4") center / cover no-repeat;
+  filter: blur(18px);
+}
+
+#status-splash,
+#status-splash.fullsize--true {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  object-fit: contain;
+  object-position: center;
+}
+
+#status-progress {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(320px, 74vw);
+  height: 12px;
+  margin: 0;
+  appearance: none;
+  border: 1px solid #ffe3a666;
+  border-radius: 999px;
+  background: #29170ecc;
+  color: #f3bc64;
+  accent-color: #f3bc64;
+  overflow: hidden;
+  z-index: 2;
+}
+
+#status-progress::-webkit-progress-bar {
+  background: #29170ecc;
+  border-radius: 999px;
+}
+#status-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #d99649, #ffe2a0);
+  border-radius: 999px;
+}
+#status-progress::-moz-progress-bar {
+  background: #f3bc64;
+  border-radius: 999px;
+}
+
+#loading-hint {
+  bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+  max-width: 430px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1px solid #ffe3a633;
+  border-radius: 14px;
+  background: #29170ed9;
+  color: #fff1d3 !important;
+  line-height: 1.4 !important;
+  text-shadow: 0 1px 2px #1a0f0b;
+}
+
+#status-notice {
+  max-height: 70vh;
+  overflow: auto;
+}
