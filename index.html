@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
@@ -109,10 +109,10 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="split-loader.js?v=cf4f6c6ce805f20e"></script>
+		<script src="split-loader.js?v=1815c0dc54701f1c"></script>
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":47285912,"index.wasm":38034280},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":81832568,"index.wasm":38034280},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -203,7 +203,7 @@ const engine = new Engine(GODOT_CONFIG);
 		engine.startGame({
 			'onProgress': function (current, total) {
 				if (current > 0 && total > 0) {
-					document.getElementById('loading-hint').textContent = current >= total ? 'Đang khởi tạo game…' : 'Đang tải game: ' + Math.floor(current * 100 / total) + '%';
+					const hint = document.getElementById('loading-hint'); if (hint) hint.textContent = current >= total ? 'Đang khởi tạo game…' : 'Đang tải game: ' + Math.floor(current * 100 / total) + '%';
 					statusProgress.value = current;
 					statusProgress.max = total;
 				} else {
